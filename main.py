@@ -2,7 +2,12 @@ import numpy as np
 shape_myarray=(23,23)
 x=np.zeros(shape_myarray)
 
-def parse_content(file_content: list):
+def parse(filename):
+    file_content = []
+    # print("parsing file", filename)
+    with open(filename, 'r') as file:
+        for line in file:
+            file_content.append(line)
     nodes = []
     found_p = False
     name = ''
@@ -26,14 +31,6 @@ def parse_content(file_content: list):
             if edge_from == edge_to:
                 raise ParseError("loop detected: {} - {}", edge_from, edge_to)
             x[int(edge_from)-1][int(edge_to)-1] = 1
-
-def parse(filename):
-    file_content = []
-    # print("parsing file", filename)
-    with open(filename, 'r') as file:
-        for line in file:
-            file_content.append(line)
-    return parse_content(file_content)
 
 parse("data.txt")
 print(x)
