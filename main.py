@@ -1,6 +1,7 @@
-import numpy as np 
-shape_myarray=(23,23)
-x=np.zeros(shape_myarray)
+import numpy as np
+
+data = np.zeros((23,23))
+population = np.zeros((50, 23))
 
 def parse(filename):
     file_content = []
@@ -28,10 +29,8 @@ def parse(filename):
             raise ParseError("found edges before p")
         elif cmd == 'e' and found_p:
             [edge_from, edge_to] = rest
-            if edge_from == edge_to:
-                raise ParseError("loop detected: {} - {}", edge_from, edge_to)
-            x[int(edge_from)-1][int(edge_to)-1] = 1
+            data[int(edge_from)-1][int(edge_to)-1] = 1
 
 parse("data.txt")
-print(x)
+print(data)
 
