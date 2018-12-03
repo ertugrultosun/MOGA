@@ -4,6 +4,7 @@ from random import randint
 data = np.zeros((23,23))
 population = np.zeros(shape=(50,23))
 colornum = 5
+fitness = np.zeros(shape=(50,2))
 
 def parse(filename):
     file_content = []
@@ -37,8 +38,25 @@ def createpopulation(pop):
         for j in range (23):
             pop[i][j] = randint(1, 5)
     
+def fitnesscalculate(pop):
+    temp = 0
+    f1 = 0
+    f2 = 0
+    for i in range (50):
+        for j in range (23):
+            node = pop[i][j]
+            if (pop[i][j] == temp):
+                f1 = f1 + temp
+                f2 = f2 + temp
+                print(temp)
+            else:
+                temp = pop[i][j]
+                print(temp) 
+    print(f1)
+    print(f2)
 
 parse("data.txt")
 createpopulation(population)
+fitnesscalculate(population)
 
 
