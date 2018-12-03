@@ -1,11 +1,12 @@
 import numpy as np
+from random import randint
 
 data = np.zeros((23,23))
-population = np.zeros((50, 23))
+population = np.zeros(shape=(50,23))
+colornum = 5
 
 def parse(filename):
     file_content = []
-    # print("parsing file", filename)
     with open(filename, 'r') as file:
         for line in file:
             file_content.append(line)
@@ -31,6 +32,13 @@ def parse(filename):
             [edge_from, edge_to] = rest
             data[int(edge_from)-1][int(edge_to)-1] = 1
 
+def createpopulation(pop):
+    for i in range (50):
+        for j in range (23):
+            pop[i][j] = randint(1, 5)
+    
+
 parse("data.txt")
-print(data)
+createpopulation(population)
+
 
