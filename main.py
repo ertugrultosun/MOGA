@@ -1,11 +1,12 @@
 import numpy as np
 from random import randint
 
+colornum = 5
+cost = [3,2,6,7,5]
 data = np.zeros((23,23))
 population = np.zeros(shape=(50,23))
-colornum = 5
 fitness = np.zeros(shape=(50,2))
-cost = [3,2,6,7,5]
+rank = np.zeros(shape=(50))
 
 def parse(filename):
     file_content = []
