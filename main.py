@@ -52,17 +52,18 @@ def fitnesscalculate(pop):
     for i in range (50):
         for j in range (23):
             node = pop[i][j]
+            fitness [i][1] = cost[int(node)-1]
             for x in range (23):
                 if x != j:
                     if node == pop[i][x] and data[j][x] == 1.0:
                         print("X :",j," Y :",x," == 1")
                         f1 += 1
-        fitness [i][1] = f1
+        fitness [i][0] = f1
         f1 = 0 
 
 parse("data.txt")
 createpopulation(population)
-"""printpopulation(population)"""
+printpopulation(population)
 fitnesscalculate(population)
 print(fitness)
 
