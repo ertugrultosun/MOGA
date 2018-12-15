@@ -1,5 +1,10 @@
 import numpy as np
 from random import randint
+from scipy import spatial
+from functools import reduce
+import operator
+import copy
+import time
 
 colornum = 5
 cost = [3,2,6,7,5]
@@ -62,11 +67,32 @@ def fitnesscalculate(pop):
         fitness [i][0] = f1
         f1 = 0 
 
+def is_pareto(costs, maximise=False):
+    """
+    :param costs: An (n_points, n_costs) array
+    :maximise: boolean. True for maximising, False for minimising
+    :return: A (n_points, ) boolean array, indicating whether each point is Pareto efficient
+    """
+    is_efficient = np.ones(costs.shape[0], dtype = bool)
+    for i, c in enumerate(costs):
+        if is_efficient[i]:
+            if maximise:
+                is_efficient[is_efficient] = np.any(costs[is_efficient]>=c, axis=1)  # Remove dominated points
+            else:
+                is_efficient[is_efficient] = np.any(costs[is_efficient]<=c, axis=1)  # Remove dominated points
+    print(is_efficient)
+    return is_efficient
+
+
 parse("data.txt")
 createpopulation(population)
 printpopulation(population)
 fitnesscalculate(population)
+is_pareto(fitness)
 print(fitness)
+
+
+
 
 
 
