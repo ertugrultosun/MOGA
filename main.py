@@ -5,6 +5,7 @@ from functools import reduce
 import operator
 import copy
 import time
+import matplotlib.pyplot as plt 
 
 colornum = 5
 cost = [3,2,6,7,5]
@@ -80,16 +81,24 @@ def is_pareto(costs, maximise=False):
                 is_efficient[is_efficient] = np.any(costs[is_efficient]>=c, axis=1)  # Remove dominated points
             else:
                 is_efficient[is_efficient] = np.any(costs[is_efficient]<=c, axis=1)  # Remove dominated points
-    print(is_efficient)
     return is_efficient
-
 
 parse("data.txt")
 createpopulation(population)
 printpopulation(population)
 fitnesscalculate(population)
-is_pareto(fitness)
-print(fitness)
+dominate = is_pareto(fitness)
+for i in range(len(fitness)):
+    if dominate[i]:
+        print(fitness[i])
+print(dominate)
+x, y = fitness.T
+plt.scatter(x,y)
+plt.show()
+
+
+
+
 
 
 
