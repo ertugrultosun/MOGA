@@ -25,6 +25,7 @@ population = np.zeros(shape=(50,23))
 fitness = np.zeros(shape=(50,2))
 rank = np.zeros(shape=(50))
 parent = np.zeros(shape=(50,23))
+iterationcount = 0
 
 def parse(filename):
     file_content = []
@@ -124,7 +125,9 @@ def is_pareto(costs, maximise=False):
                 is_efficient[is_efficient] = np.any(costs[is_efficient]<=c, axis=1)  # Remove dominated points
     return is_efficient
 
-def iteration(pop,fit,rank,parent):
+def iteration(pop,fit,rank,parent,ct):
+    start_time = time.time()
+    ct += 1
     createpopulation(pop)
     printpopulation(pop)
     fitnesscalculate(pop)
@@ -132,6 +135,7 @@ def iteration(pop,fit,rank,parent):
     printrank(rank)
     createparent(pop,parent)
     printparent(parent)
+    print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
 
 def additionalfn(fit):
     dominate = is_pareto(fitness)
@@ -144,7 +148,7 @@ def additionalfn(fit):
     plt.show()
 
 parse("data.txt")
-
+iteration(population,fitness,rank,parent,iterationcount)
 
 
 
