@@ -76,7 +76,7 @@ def fitnesscalculate(pop):
             for x in range (23):
                 if x != j:
                     if node == pop[i][x] and data[j][x] == 1.0:
-                        print("X :",j," Y :",x," == 1")
+                        #print("X :",j," Y :",x," == 1")
                         f1 += 1
         fitness [i][0] = f1
         f1 = 0 
@@ -129,12 +129,12 @@ def iteration(pop,fit,rank,parent,ct):
     start_time = time.time()
     ct += 1
     createpopulation(pop)
-    printpopulation(pop)
     fitnesscalculate(pop)
     rankcalculate(fit,rank)
-    printrank(rank)
     createparent(pop,parent)
-    printparent(parent)
+    """ printpopulation(pop)
+    printrank(rank)
+    printparent(parent) """
     print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
 
 def additionalfn(fit):
