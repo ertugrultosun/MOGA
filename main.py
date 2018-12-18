@@ -1,3 +1,14 @@
+""" 
+Multi Objective Genetic Algorithm (MOGA) with Python
+Ertugrul Tosun - 2018
+
+Usage
+1- Prepare the data set. By default is myciel4.col.
+2- Call parse function with your data set path.
+3- Call the iteration function with your desired iteration count.
+
+"""
+
 import numpy as np
 from random import randint
 from scipy import spatial
@@ -85,15 +96,18 @@ def printrank(rank):
 
 def createparent(pop,parent):
     temprank = 99999
-    tempparent = []
+    tempparent = np.zeros(shape=(1,23))
     randomindex = 0
     for i in range(50):
         for j in range(5):
-            randomindex = randint(1,50)
+            randomindex = randint(1,50)-1
             if temprank > rank[randomindex]:
                 temprank = rank[randomindex]
-                tempparent = population[randomindex]
-        parent[i] = tempparent[i]
+                for z in range(23):
+                    tempparent[0][z] = population[randomindex][z]
+        for x in range(23):
+            parent[i][x] = tempparent[0][x]
+        temprank = 9999
 
 def printparent(parent):
     for i in range (50):
@@ -110,21 +124,27 @@ def is_pareto(costs, maximise=False):
                 is_efficient[is_efficient] = np.any(costs[is_efficient]<=c, axis=1)  # Remove dominated points
     return is_efficient
 
-def iteration():
-    return True
+def iteration(pop,fit,rank,parent):
+    createpopulation(pop)
+    printpopulation(pop)
+    fitnesscalculate(pop)
+    rankcalculate(fit,rank)
+    printrank(rank)
+    createparent(pop,parent)
+    printparent(parent)
+
+def additionalfn(fit):
+    dominate = is_pareto(fitness)
+    for i in range(len(fitness)):
+        if dominate[i]:
+            print(fitness[i])
+    print(dominate)
+    x, y = fitness.T
+    plt.scatter(x,y)
+    plt.show()
 
 parse("data.txt")
-createpopulation(population)
-printpopulation(population)
-fitnesscalculate(population)
-dominate = is_pareto(fitness)
-for i in range(len(fitness)):
-    if dominate[i]:
-        print(fitness[i])
-print(dominate)
-x, y = fitness.T
-plt.scatter(x,y)
-plt.show()
+
 
 
 
