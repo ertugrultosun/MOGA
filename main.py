@@ -13,6 +13,7 @@ data = np.zeros((23,23))
 population = np.zeros(shape=(50,23))
 fitness = np.zeros(shape=(50,2))
 rank = np.zeros(shape=(50))
+parent = np.zeros(shape=(50,23))
 
 def parse(filename):
     file_content = []
@@ -67,6 +68,37 @@ def fitnesscalculate(pop):
                         f1 += 1
         fitness [i][0] = f1
         f1 = 0 
+
+def rankcalculate(fit,rank):
+    for i in range(50):
+        for j in range(50):
+            if fit[j][0] < fit [i][0] and fit[j][1] < fit[i][1]:
+                rank[i] += 1
+            elif fit[j][0] < fit[i][0] and fit[j][1] <= fit[i][1]:
+                rank[i] += 1
+            elif fit[j][0] <= fit[i][0] and fit[j][1] < fit[i][1]:
+                rank[i] += 1
+
+def printrank(rank):
+    for i in range(50):
+        print(i,". populations rank is :",rank[i])
+
+def createparent(pop,parent):
+    temprank = 99999
+    tempparent = []
+    randomindex = 0
+    for i in range(50):
+        for j in range(5):
+            randomindex = randint(1,50)
+            if temprank > rank[randomindex]:
+                temprank = rank[randomindex]
+                tempparent = population[randomindex]
+        parent[i] = tempparent[i]
+
+def printparent(parent):
+    for i in range (50):
+        for j in range (23):
+            print(parent[i][j]) 
 
 def is_pareto(costs, maximise=False):
     """
