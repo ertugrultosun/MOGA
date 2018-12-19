@@ -14,9 +14,10 @@ from random import randint
 from scipy import spatial
 from functools import reduce
 import operator
-import copy
+from copy import copy, deepcopy
 import time
 import matplotlib.pyplot as plt 
+np.set_printoptions(threshold=np.inf)
 
 colornum = 5
 cost = [3,2,6,7,5]
@@ -25,6 +26,8 @@ population = np.zeros(shape=(50,23))
 fitness = np.zeros(shape=(50,2))
 rank = np.zeros(shape=(50))
 parent = np.zeros(shape=(50,23))
+crossover = np.zeros(shape=(50,23))
+mutation = np.zeros(shape=(50,23))
 iterationcount = 0
 
 def parse(filename):
@@ -115,6 +118,37 @@ def printparent(parent):
         for j in range (23):
             print(parent[i][j]) 
 
+def createcrossover(parent,crossover):
+    i,j = 1,1
+    temp1,temp2 = np.zeros(shape=(1,23)),np.zeros(shape=(1,23))
+    while i<50:
+        for x in range(23):
+            temp1[0][x] = parent[i][x]
+            if i<49:
+                temp2[0][x] = parent[i+1][x]
+        for x in range(23):
+            if x<11:
+                crossover[j][x] = temp1[0][x]
+            elif x>11:
+                crossover[j][x] = temp2[0][x] 
+        if i<49:
+            j += 1
+        for x in range(23):
+            if x<11:
+                crossover[j][x] = temp2[0][x]
+            elif x>11:
+                crossover[j][x] = temp1[0][x]
+        i += 1
+    print(parent)
+    print("-----------------")
+    print(crossover)
+
+def createmutation(crossover,mutation):
+    for i in range(50):
+        randomindex = randint(1,23)-1
+        crossover[i][randomindex] = randint(1,5)
+    mutation = deepcopy(crossover)
+
 def is_pareto(costs, maximise=False):
     is_efficient = np.ones(costs.shape[0], dtype = bool)
     for i, c in enumerate(costs):
@@ -132,6 +166,7 @@ def iteration(pop,fit,rank,parent,ct):
     fitnesscalculate(pop)
     rankcalculate(fit,rank)
     createparent(pop,parent)
+    createcrossover(parent,crossover)
     """ printpopulation(pop)
     printrank(rank)
     printparent(parent) """
