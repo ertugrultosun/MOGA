@@ -139,9 +139,6 @@ def createcrossover(parent,crossover):
             elif x>11:
                 crossover[j][x] = temp1[0][x]
         i += 1
-    print(parent)
-    print("-----------------")
-    print(crossover)
 
 def createmutation(crossover,mutation):
     for i in range(50):
@@ -159,18 +156,40 @@ def is_pareto(costs, maximise=False):
                 is_efficient[is_efficient] = np.any(costs[is_efficient]<=c, axis=1)  # Remove dominated points
     return is_efficient
 
-def iteration(pop,fit,rank,parent,ct):
+def replacepop(pop,mut):
+    pop = deepcopy(mut)
+
+def updatearchive(fit):
+    for i in range(50):
+        for j in range(50):
+            if fit[j][0] < fit [i][0] and fit[j][1] < fit[i][1]:
+                rank[i] += 1
+            elif fit[j][0] < fit[i][0] and fit[j][1] <= fit[i][1]:
+                rank[i] += 1
+            elif fit[j][0] <= fit[i][0] and fit[j][1] < fit[i][1]:
+                rank[i] += 1
+
+def iteration(ct):
     start_time = time.time()
-    ct += 1
-    createpopulation(pop)
-    fitnesscalculate(pop)
-    rankcalculate(fit,rank)
-    createparent(pop,parent)
+    createparent(population,parent)
     createcrossover(parent,crossover)
-    """ printpopulation(pop)
-    printrank(rank)
-    printparent(parent) """
+    createmutation(crossover,mutation)
+    replacepop(population,mutation)
+    fitnesscalculate(population)
+    rankcalculate(fitness,rank)
+    #updatearchive(fitness)
     print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
+
+def main(itnum):
+    i = 0
+    parse("data.txt")
+    createpopulation(population)
+    fitnesscalculate(population)
+    rankcalculate(fitness,rank)
+    #updatearchive()
+    while i<itnum:
+        iteration(i)
+        i += 1    
 
 def additionalfn(fit):
     dominate = is_pareto(fitness)
@@ -182,15 +201,4 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-parse("data.txt")
-iteration(population,fitness,rank,parent,iterationcount)
-
-
-
-
-
-
-
-
-
-
+main(100)
