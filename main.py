@@ -29,6 +29,7 @@ parent = np.zeros(shape=(50,23))
 crossover = np.zeros(shape=(50,23))
 mutation = np.zeros(shape=(50,23))
 iterationcount = 0
+archive = []
 
 def parse(filename):
     file_content = []
@@ -161,13 +162,16 @@ def replacepop(pop,mut):
 
 def updatearchive(fit):
     for i in range(50):
-        for j in range(50):
-            if fit[j][0] < fit [i][0] and fit[j][1] < fit[i][1]:
-                rank[i] += 1
-            elif fit[j][0] < fit[i][0] and fit[j][1] <= fit[i][1]:
-                rank[i] += 1
-            elif fit[j][0] <= fit[i][0] and fit[j][1] < fit[i][1]:
-                rank[i] += 1
+        if rank[i] == 0:
+            archive.append(fit[i])
+    for i in range(len(archive)):
+        for j in range(len(archive)):
+            if archive[j][0] < archive [i][0] and archive[j][1] < archive[i][1]:
+                archive.pop(i)
+            elif archive[j][0] < archive[i][0] and archive[j][1] <= archive[i][1]:
+                archive.pop(i)
+            elif archive[j][0] <= archive[i][0] and archive[j][1] < archive[i][1]:
+                archive.pop(i)  
 
 def iteration(ct):
     start_time = time.time()
@@ -177,7 +181,7 @@ def iteration(ct):
     replacepop(population,mutation)
     fitnesscalculate(population)
     rankcalculate(fitness,rank)
-    #updatearchive(fitness)
+    updatearchive(fitness)
     print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
 
 def main(itnum):
@@ -186,10 +190,11 @@ def main(itnum):
     createpopulation(population)
     fitnesscalculate(population)
     rankcalculate(fitness,rank)
-    #updatearchive()
+    updatearchive(fitness)
     while i<itnum:
         iteration(i)
         i += 1    
+    print(archive)
 
 def additionalfn(fit):
     dominate = is_pareto(fitness)
@@ -201,4 +206,4 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-main(100)
+main(500)
