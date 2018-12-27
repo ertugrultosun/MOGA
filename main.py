@@ -24,12 +24,15 @@ cost = [3,2,6,7,5]
 data = np.zeros((23,23))
 population = np.zeros(shape=(50,23))
 fitness = np.zeros(shape=(50,2))
+firstfitness = np.zeros(shape=(50,2))
 rank = np.zeros(shape=(50))
 parent = np.zeros(shape=(50,23))
 crossover = np.zeros(shape=(50,23))
 mutation = np.zeros(shape=(50,23))
 iterationcount = 0
+n = 2
 archive = []
+archivecount = 0
 
 def parse(filename):
     file_content = []
@@ -73,10 +76,11 @@ def fitnesscalculate(pop):
     f2 = 0
     node = 0
     buffer = 0
+    fitness[:] = 0
     for i in range (50):
         for j in range (23):
             node = pop[i][j]
-            fitness [i][1] = cost[int(node)-1]
+            fitness [i][1] += cost[int(node)-1]
             for x in range (23):
                 if x != j:
                     if node == pop[i][x] and data[j][x] == 1.0:
@@ -87,6 +91,7 @@ def fitnesscalculate(pop):
 
 def rankcalculate(fit,rank):
     for i in range(50):
+        rank[i] = 0
         for j in range(50):
             if fit[j][0] < fit [i][0] and fit[j][1] < fit[i][1]:
                 rank[i] += 1
@@ -145,7 +150,9 @@ def createmutation(crossover,mutation):
     for i in range(50):
         randomindex = randint(1,23)-1
         crossover[i][randomindex] = randint(1,5)
-    mutation = deepcopy(crossover)
+    for i in range(50):
+        for j in range(23):
+            mutation[i][j] = crossover[i][j]
 
 def is_pareto(costs, maximise=False):
     is_efficient = np.ones(costs.shape[0], dtype = bool)
@@ -158,20 +165,64 @@ def is_pareto(costs, maximise=False):
     return is_efficient
 
 def replacepop(pop,mut):
-    pop = deepcopy(mut)
+    for i in range(50):
+        for j in range(23):
+            pop[i][j] = mutation[i][j]
 
-def updatearchive(fit):
+def addarchive():
+    buffer = []
     for i in range(50):
         if rank[i] == 0:
-            archive.append(fit[i])
-    for i in range(len(archive)):
-        for j in range(len(archive)):
-            if archive[j][0] < archive [i][0] and archive[j][1] < archive[i][1]:
-                archive.pop(i)
-            elif archive[j][0] < archive[i][0] and archive[j][1] <= archive[i][1]:
-                archive.pop(i)
-            elif archive[j][0] <= archive[i][0] and archive[j][1] < archive[i][1]:
-                archive.pop(i)  
+            for j in range(23):
+                buffer.append(population[i][j])
+                archive.append(buffer)
+            buffer.clear()
+
+def updatearchive():
+    bufrank = np.zeros(shape=(501))
+    buffitness = np.zeros(shape=(501,2))
+    lastarchive = np.zeros(shape=(501,23))
+    f1 = 0
+    f2 = 0
+    node = 0
+    buffer = 0
+    for i in range (501):
+        for j in range (23):
+            node = archive[i][j]
+            if node != 999:
+                buffitness [i][1] = cost[int(node)-1]
+                for x in range (23):
+                    if x != j:
+                        if node == archive[i][x] and data[j][x] == 1.0:
+                            #print("X :",j," Y :",x," == 1")
+                            f1 += 1
+        buffitness [i][0] = f1
+        f1 = 0 
+    for i in range(501):
+        for j in range(501):
+            if buffitness[j][0] < buffitness [i][0] and buffitness[j][1] < buffitness[i][1]:
+                bufrank[i] += 1
+            elif buffitness[j][0] < buffitness[i][0] and buffitness[j][1] <= buffitness[i][1]:
+                bufrank[i] += 1
+            elif buffitness[j][0] <= buffitness[i][0] and buffitness[j][1] < buffitness[i][1]:
+                bufrank[i] += 1
+    for i in range(501):
+        if bufrank[i] == 0:
+            for j in range(23):
+                lastarchive[i][j] = archive[i][j]
+    return lastarchive
+
+def performancecalc():
+    firstfit = 0
+    lastfit = 0
+    sum = 0
+    for i in range(50):
+        firstfit += (firstfitness[i][0] + firstfitness[i][1])
+        lastfit += (fitness[i][0] + fitness[i][1])
+    firstfit = firstfit/50
+    lastfit = lastfit/50
+    print("First fitness avg for 50 populations is = %s" %(firstfit))
+    print("Last fitness avg for 50 populations is = %s" %(lastfit))
 
 def iteration(ct):
     start_time = time.time()
@@ -181,21 +232,35 @@ def iteration(ct):
     replacepop(population,mutation)
     fitnesscalculate(population)
     rankcalculate(fitness,rank)
-    updatearchive(fitness)
+    addarchive()
     print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
 
 def main(itnum):
+    start_time = time.time()
     i = 0
     parse("data.txt")
     createpopulation(population)
     fitnesscalculate(population)
+    for i in range(50):
+        firstfitness[i][0] = fitness[i][0]
+        firstfitness[i][1] = fitness[i][1]
     rankcalculate(fitness,rank)
-    updatearchive(fitness)
+    """ initarchive = np.zeros(shape=[50, 2])
+    for i in range(len(archive)-1):
+        initarchive[i][0] = archive[i][0]
+        initarchive[i][1] = archive[i][1] """
+    x, y = fitness.T
+    plt.scatter(x,y)
+    plt.show()
+    i = 0
     while i<itnum:
         iteration(i)
-        i += 1    
-    print(archive)
-
+        i += 1
+    print("--- %s seconds for Multi Objective Genetic Algorithm ---" %(time.time() - start_time))
+    print(firstfitness)
+    print(fitness)
+    print(population)
+    
 def additionalfn(fit):
     dominate = is_pareto(fitness)
     for i in range(len(fitness)):
@@ -206,4 +271,8 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-main(500)
+main(5000)
+x, y = fitness.T
+plt.scatter(x,y)
+plt.show()
+performancecalc()
