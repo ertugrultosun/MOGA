@@ -18,7 +18,6 @@ from copy import copy, deepcopy
 import time
 import matplotlib.pyplot as plt
 import tkinter
-top = tkinter.Tk()
 np.set_printoptions(threshold=np.inf)
 
 colornum = 5
@@ -273,8 +272,7 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-canvas1 = tkinter.Canvas(top, width = 400, height = 400)
-canvas1.pack()
+top = tkinter.Tk()
 
 def RunMoga():
     MsgBox = tkinter.messagebox.askquestion ('Run the MOGA','Are you sure you want to run the MOGA',icon = 'warning')
@@ -285,21 +283,27 @@ def RunMoga():
         plt.scatter(x,y)
         plt.show()
         performancecalc()
+        pop = tkinter.Tk()
+        userinterface(pop)
     else:
         tkinter.messagebox.showinfo('Return','You will now return to the application screen')
 
+def userinterface(top, toggle = False):
+    canvas1 = tkinter.Canvas(top, width = 400, height = 400)
+    canvas1.pack()
+    header = tkinter.Label(top, text="Multi Objective Genetic Algorithm")
+    header2 = tkinter.Label(top, text="Ertugrul Tosun - 141701010")
+    yazi = "Available Color Number   :  "+str(colornum)
+    iterationnum = tkinter.Label(top, text="Total Iteration Number   :  500")
+    w = tkinter.Label(top, text=yazi)
+    header.config(font=("Courier", 12))
+    header2.config(font=("Courier",12))
+    canvas1.create_window(200,30, window=header)
+    canvas1.create_window(200,50, window=header2)
+    canvas1.create_window(200,100, window=w)
+    canvas1.create_window(200,125, window=iterationnum)
+    button1 = tkinter.Button (top, text='Start Multi Objective Genetic Algorithm',command=RunMoga)
+    canvas1.create_window(200, 300, window=button1)
+    top.mainloop()
 
-header = tkinter.Label(top, text="Multi Objective Genetic Algorithm")
-header2 = tkinter.Label(top, text="Ertugrul Tosun - 141701010")
-yazi = "Available Color Number   :  "+str(colornum)
-iterationnum = tkinter.Label(top, text="Total Iteration Number   :  500")
-w = tkinter.Label(top, text=yazi)
-header.config(font=("Courier", 12))
-header2.config(font=("Courier",12))
-canvas1.create_window(200,30, window=header)
-canvas1.create_window(200,50, window=header2)
-canvas1.create_window(200,100, window=w)
-canvas1.create_window(200,125, window=iterationnum)
-button1 = tkinter.Button (top, text='Start Multi Objective Genetic Algorithm',command=RunMoga)
-canvas1.create_window(200, 300, window=button1)
-top.mainloop()
+userinterface(top)
