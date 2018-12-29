@@ -272,10 +272,8 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-top = tkinter.Tk()
-
-def RunMoga():
-    MsgBox = tkinter.messagebox.askquestion ('Run the MOGA','Are you sure you want to run the MOGA',icon = 'warning')
+def RunMoga(top):
+    MsgBox = tkinter.messagebox.askquestion ('Run the MOGA','Are you sure want to run the MOGA',icon = 'warning')
     if MsgBox == 'yes':
         top.destroy()
         main(500)
@@ -283,12 +281,15 @@ def RunMoga():
         plt.scatter(x,y)
         plt.show()
         performancecalc()
-        pop = tkinter.Tk()
-        userinterface(pop)
+        userinterface()
     else:
         tkinter.messagebox.showinfo('Return','You will now return to the application screen')
 
-def userinterface(top, toggle = False):
+def userinterface(toggle = False):
+    top = tkinter.Tk()
+    top.title("MOGA - Ertugrul Tosun - 141701010")
+    if toggle:
+        test = "Buraya calistiktan sonraki sonuclar gelecek."
     canvas1 = tkinter.Canvas(top, width = 400, height = 400)
     canvas1.pack()
     header = tkinter.Label(top, text="Multi Objective Genetic Algorithm")
@@ -302,8 +303,8 @@ def userinterface(top, toggle = False):
     canvas1.create_window(200,50, window=header2)
     canvas1.create_window(200,100, window=w)
     canvas1.create_window(200,125, window=iterationnum)
-    button1 = tkinter.Button (top, text='Start Multi Objective Genetic Algorithm',command=RunMoga)
+    button1 = tkinter.Button (top, text='Start Multi Objective Genetic Algorithm',command= lambda : RunMoga(top))
     canvas1.create_window(200, 300, window=button1)
     top.mainloop()
 
-userinterface(top)
+userinterface()
