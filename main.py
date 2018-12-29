@@ -16,7 +16,9 @@ from functools import reduce
 import operator
 from copy import copy, deepcopy
 import time
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import tkinter
+top = tkinter.Tk()
 np.set_printoptions(threshold=np.inf)
 
 colornum = 5
@@ -235,7 +237,7 @@ def iteration(ct):
     addarchive()
     print("--- %s seconds for %s. iteration ---" %(time.time() - start_time , ct))
 
-def main(itnum):
+def main(itnum=500):
     start_time = time.time()
     i = 0
     parse("data.txt")
@@ -260,7 +262,7 @@ def main(itnum):
     print(firstfitness)
     print(fitness)
     print(population)
-    
+
 def additionalfn(fit):
     dominate = is_pareto(fitness)
     for i in range(len(fitness)):
@@ -271,8 +273,23 @@ def additionalfn(fit):
     plt.scatter(x,y)
     plt.show()
 
-main(5000)
-x, y = fitness.T
-plt.scatter(x,y)
-plt.show()
-performancecalc()
+canvas1 = tkinter.Canvas(top, width = 800, height = 600)
+canvas1.pack()
+
+def RunMoga():
+    MsgBox = tkinter.messagebox.askquestion ('Run the MOGA','Are you sure you want to run the MOGA',icon = 'warning')
+    if MsgBox == 'yes':
+        top.destroy()
+        main(500)
+        x, y = fitness.T
+        plt.scatter(x,y)
+        plt.show()
+        performancecalc()
+    else:
+        tkinter.messagebox.showinfo('Return','You will now return to the application screen')
+
+
+button1 = tkinter.Button (top, text='Multi Objective Genetic Algorithm',command=RunMoga)
+canvas1.create_window(97, 270, window=button1)
+
+top.mainloop()
