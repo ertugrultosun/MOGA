@@ -279,10 +279,16 @@ def drawgraph(toggle = False):
     if toggle:
         x, y = firstfitness.T
         plt.scatter(x,y)
+        plt.title('First Population')
+        plt.xlabel('F1 - Wrong Coloring')
+        plt.ylabel('F2 - Cost')
         plt.show()
     else:
         x, y = fitness.T
         plt.scatter(x,y)
+        plt.title('Last Population')
+        plt.xlabel('F1 - Wrong Coloring')
+        plt.ylabel('F2 - Cost')
         plt.show()
 
 def userinterface(toggle = False, ff=999,lf=999,tt=999):
