@@ -312,7 +312,7 @@ def userinterface(toggle = False, ff=999,lf=999,tt=999,count=0):
         first = "First Population's Fitness Avg   :  "+str(firstfit)
         last = "Last Population's Fitness Avg   :  "+str(lastfit)
         total = "Total time for iterations in seconds  :  "+str(round(tt, 2))
-       
+        
         w1 = tkinter.Label(top, text=first, font=("Helvetica", 12))
         w2 = tkinter.Label(top, text=last, font=("Helvetica", 12))
         w3 = tkinter.Label(top, text=total, font=("Helvetica", 12))
