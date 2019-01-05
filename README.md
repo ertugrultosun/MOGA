@@ -2,7 +2,7 @@
 
 CEN402 / Graduation Project II for Girne American University, Engineering Faculty, Computer Engineering Department.
 
-Genetic algorithm ( will be multi objective ) for graph coloring problem. Objectives are color costs and failed adj. numbers. The iteration number will be entered by user. Every run time, the initial population is changed so there is no way to compare same population with different iteration numbers. This feature will be added.
+Multi Objective Genetic Algorithm for graph coloring problem. Objectives are color costs and failed adj. numbers. The iteration number will be entered by user. Every run time, the initial population is changed so there is no way to compare same population with different iteration numbers. This feature will be added.
 
 The color number, population sizes and color costs are pre defined. This variables will be dynamic in next versions. This algorithm is perform this tasks;
 
