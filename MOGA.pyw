@@ -38,6 +38,7 @@ firstfit = 0
 lastfit = 0
 totaltime = 0
 itnum=0
+archive = np.zeros(shape=(1,23))
 
 def parse(filename):
     file_content = []
@@ -174,48 +175,17 @@ def replacepop(pop,mut):
         for j in range(23):
             pop[i][j] = mutation[i][j]
 
-def addarchive():
-    buffer = []
+
+def addarchive(ct):
+    lastfitness = []
+    lastrank = []
     for i in range(50):
         if rank[i] == 0:
             for j in range(23):
-                buffer.append(population[i][j])
-                archive.append(buffer)
-            buffer.clear()
-
-def updatearchive():
-    bufrank = np.zeros(shape=(501))
-    buffitness = np.zeros(shape=(501,2))
-    lastarchive = np.zeros(shape=(501,23))
-    f1 = 0
-    f2 = 0
-    node = 0
-    buffer = 0
-    for i in range (501):
-        for j in range (23):
-            node = archive[i][j]
-            if node != 999:
-                buffitness [i][1] = cost[int(node)-1]
-                for x in range (23):
-                    if x != j:
-                        if node == archive[i][x] and data[j][x] == 1.0:
-                            #print("X :",j," Y :",x," == 1")
-                            f1 += 1
-        buffitness [i][0] = f1
-        f1 = 0 
-    for i in range(501):
-        for j in range(501):
-            if buffitness[j][0] < buffitness [i][0] and buffitness[j][1] < buffitness[i][1]:
-                bufrank[i] += 1
-            elif buffitness[j][0] < buffitness[i][0] and buffitness[j][1] <= buffitness[i][1]:
-                bufrank[i] += 1
-            elif buffitness[j][0] <= buffitness[i][0] and buffitness[j][1] < buffitness[i][1]:
-                bufrank[i] += 1
-    for i in range(501):
-        if bufrank[i] == 0:
-            for j in range(23):
-                lastarchive[i][j] = archive[i][j]
-    return lastarchive
+                archive[len(archive)-1][j]=population[i][j]
+            ct += 1
+            ttt = len(archive)
+            archive.resize((len(archive)+1, 23), refcheck=False)
 
 def performancecalc(fi,la):
     sum = 0
@@ -226,14 +196,14 @@ def performancecalc(fi,la):
     la = la/50
     return fi,la
 
-def iteration(): 
+def iteration(cnt): 
     createparent(population,parent)
     createcrossover(parent,crossover)
     createmutation(crossover,mutation)
     replacepop(population,mutation)
     fitnesscalculate(population)
     rankcalculate(fitness,rank)
-    addarchive()
+    addarchive(cnt)
     
 def main(it):
     start_time = time.time()
@@ -252,8 +222,9 @@ def main(it):
     i = 0
     itn = it.get()
     print(int(itn))
+    countarc = 1
     while i<int(itn):
-        iteration()
+        iteration(countarc)
         i += 1
     return time.time() - start_time
 
@@ -348,3 +319,4 @@ def userinterface(toggle = False, ff=999,lf=999,tt=999,count=0):
     top.mainloop()
 
 userinterface()
+print(archive)

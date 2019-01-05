@@ -32,11 +32,13 @@ crossover = np.zeros(shape=(50,23))
 mutation = np.zeros(shape=(50,23))
 iterationcount = 0
 n = 2
-archive = []
+archive = np.zeros(shape=(50,23))
+archiverank = []
 archivecount = 0
 firstfit = 0
 lastfit = 0
 totaltime = 0
+cnt = 1
 
 def parse(filename):
     file_content = []
@@ -173,14 +175,15 @@ def replacepop(pop,mut):
         for j in range(23):
             pop[i][j] = mutation[i][j]
 
-def addarchive():
-    buffer = []
+def addarchive(count):
+    lastfitness = []
+    lastrank = []
     for i in range(50):
         if rank[i] == 0:
             for j in range(23):
-                buffer.append(population[i][j])
-                archive.append(buffer)
-            buffer.clear()
+                archive[count-1][j]=population[i][j]
+            count += 1
+            archive.resize((count, 23), refcheck=False)
 
 def updatearchive():
     bufrank = np.zeros(shape=(501))
@@ -232,7 +235,7 @@ def iteration():
     replacepop(population,mutation)
     fitnesscalculate(population)
     rankcalculate(fitness,rank)
-    addarchive()
+    addarchive(cnt)
     
 def main():
     itnum=500
@@ -328,3 +331,4 @@ def userinterface(toggle = False, ff=999,lf=999,tt=999):
     top.mainloop()
 
 userinterface()
+print(archive)
