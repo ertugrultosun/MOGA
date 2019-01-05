@@ -6,10 +6,10 @@ Genetic algorithm ( will be multi objective ) for graph coloring problem. Object
 
 The color number, population sizes and color costs are pre defined. This variables will be dynamic in next versions. This algorithm is perform this tasks;
 
-1 - Creating initial population
-2 - Calculate fitness values
-3 - Calculate the rank with using fitness values
-4 - Select the parents
-5 - Create new population with perform the Crossover
-6 - Change the last population with Mutation
-7 - Add to archive the best ones
+* Creating initial population  
+* Calculate fitness values  
+* Calculate the rank with using fitness values  
+* Select the parents  
+* Create new population with perform the Crossover  
+* Change the last population with Mutation  
+* Add to archive the best ones  
